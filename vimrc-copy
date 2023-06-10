@@ -1,3 +1,17 @@
+call plug#begin()
+Plug 'jiangmiao/auto-pairs'
+Plug 'preservim/nerdtree'
+Plug 'itchyny/lightline.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'preservim/nerdcommenter'
+Plug 'cocopon/iceberg.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'prettier/vim-prettier'
+Plug 'rhysd/vim-clang-format'
+Plug 'neoclide/coc.nvim'
+call plug#end()
+
 filetype plugin indent on
 set nu rnu
 set ts=2 sts=2 sw=2 et ai si
@@ -5,23 +19,6 @@ set cursorline
 set hlsearch incsearch
 nnoremap jk <esc>:update<cr>
 inoremap jk <esc>:update<cr>a
-
-call plug#begin()
-Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdtree'
-Plug 'itchyny/lightline.vim'
-Plug 'Yggdroot/indentLine'
-Plug 'preservim/nerdcommenter'
-Plug 'morhetz/gruvbox'
-Plug 'cocopon/iceberg.vim'
-Plug 'tpope/vim-surround'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'prettier/vim-prettier'
-Plug 'rhysd/vim-clang-format'
-Plug 'neoclide/coc.nvim'
-call plug#end()
 
 set background=dark
 colorscheme iceberg
@@ -35,6 +32,7 @@ set laststatus=2
 set noshowmode
 
 " indentline config
+let g:indentLine_showFirstIndentLevel = 1
 let g:indentline_fileTypeExclude = ["vimwiki", "coc-explorer", "help", "undotree", "diff"]
 let g:indentline_bufTypeExclude = ["help", "terminal"]
 let g:indentline_leadingSpaceEnabled = 1
