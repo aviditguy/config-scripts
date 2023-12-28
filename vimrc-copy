@@ -1,6 +1,5 @@
 call plug#begin()
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdtree'
 Plug 'itchyny/lightline.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'preservim/nerdcommenter'
@@ -20,10 +19,6 @@ nnoremap jk <esc>:update<cr>
 inoremap jk <esc>:update<cr>a
 
 set background=dark
-
-" nerdtree config
-nnoremap <C-b> :NERDTreeToggle<CR>
-inoremap <C-b> <esc>:NERDTreeToggle<CR>i
 
 " lightline.vim config
 set laststatus=2
