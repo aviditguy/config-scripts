@@ -1,0 +1,98 @@
+# i3 config file
+
+# set mod key to Windows key
+set $mod Mod4
+
+for_window [class=".*"] border pixel 2
+gaps inner 5
+focus_follows_mouse no
+client.focused #4c7899 #285577 #ffffff #2e9ef4
+
+# setting wallpaper
+exec --no-startup-id feh --bg-fill --randomize ~/Pictures/Desktop/*
+
+# set i3status
+bar {
+   status_command i3status
+   position top
+   mode hide
+   font pango:monospace 10
+}
+
+# close window
+bindsym $mod+q kill
+
+# fullscreen window
+bindsym $mod+f fullscreen toggle
+
+# toggle floating window
+bindsym $mod+space floating toggle
+
+# set brightness
+exec --no-startup-id sudo light -S 1
+bindsym F11 exec --no-startup-id sudo light -U 1  # decrease
+bindsym F12 exec --no-startup-id sudo light -A 1  # increase
+
+bindsym $mod+Return exec alacritty
+bindsym $mod+d exec dmenu_run
+bindsym $mod+b exec brave
+bindsym $mod+e exec thunar
+
+# split layout hozizontal
+bindsym $mod+o split h
+# split layout vertical
+bindsym $mod+v split v
+
+# Switch focus between containers
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Move containers
+bindsym $mod+Left move left
+bindsym $mod+Down move down
+bindsym $mod+Up move up
+bindsym $mod+Right move right
+
+# enter resize mode
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+   # Resize floating windows with arrow keys
+   bindsym Up resize shrink height 1 px or 1 ppt
+   bindsym Down resize grow height 1 px or 1 ppt
+   bindsym Left resize shrink width 1 px or 1 ppt
+   bindsym Right resize grow width 1 px or 1 ppt
+
+   # Exit resize mode
+   bindsym Escape mode "default"
+   bindsym Return mode "default"
+}
+
+# Change focus to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+
+# move focused window to different workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+
+# Reload, Restart and exit i3
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exit
