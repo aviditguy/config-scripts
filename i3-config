@@ -8,14 +8,14 @@ gaps inner 5
 focus_follows_mouse no
 client.focused #4c7899 #285577 #ffffff #2e9ef4
 
-# setting wallpaper
-exec --no-startup-id feh --bg-fill --randomize ~/Pictures/Desktop/*
+# Start Nitrogen to set the wallpaper
+exec --no-startup-id nitrogen --restore
 
 # set i3status
 bar {
    status_command i3status
    position top
-   mode hide
+   # mode hide
    font pango:monospace 10
 }
 
