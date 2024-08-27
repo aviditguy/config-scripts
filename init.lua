@@ -12,7 +12,7 @@ vim.opt.whichwrap:append("<,>,h,l")
 
 -- render leading whitespace
 vim.opt.list = true
-vim.opt.listchars = {tab="⋅ ", lead="⋅"}
+vim.opt.listchars = {tab="· ", lead="·"}
 
 vim.keymap.set("n", "<", "<<", {noremap=true, silent=true})
 vim.keymap.set("n", ">", ">>", {noremap=true, silent=true})
