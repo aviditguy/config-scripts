@@ -1,9 +1,9 @@
 [font]
-normal = {family = 'Source Code Pro', style = 'Regular'}
-bold = {family = 'Source Code Pro', style = 'Regular'}
-italic = {family = 'Source Code Pro', style = 'Regular'}
-size = 11.4
-offset = {x=1, y=0}
+normal = {family = 'TamzenForPowerline', style = 'Regular'}
+bold = {family = 'TamzenForPowerline', style = 'Regular'}
+italic = {family = 'TamzenForPowerline', style = 'Regular'}
+size = 15.4
+offset = {x=-1, y=0}
 
 # Colors (Alabaster Dark)
 # author tonsky
