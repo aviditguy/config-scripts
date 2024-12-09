@@ -1,9 +1,10 @@
 [window]
 opacity = 0.95
+startup_mode = 'Maximized'
 
 [font]
-normal = {family = 'PixelOperatorMono', style = 'Light'}
-bold = {family = 'PixelOperatorMono', style = 'Light'}
-italic = {family = 'PixelOperatorMono', style = 'Light'}
-size = 16
-offset = {x=0, y=0}
+normal = {family = 'TerminessNerdFont', style = 'Light'}
+bold = {family = 'TerminessNerdFont', style = 'Light'}
+italic = {family = 'TerminessNerdFont', style = 'Light'}
+size = 12.0
+offset = {x=1, y=1}
