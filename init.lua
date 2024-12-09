@@ -16,3 +16,10 @@ vim.opt.listchars = {tab="· ", lead="·"}
 
 vim.keymap.set("n", "<", "<<", {noremap=true, silent=true})
 vim.keymap.set("n", ">", ">>", {noremap=true, silent=true})
+
+vim.cmd [[
+  highlight Normal guibg=none
+  highlight NonText guibg=none
+  highlight Normal ctermbg=none
+  highlight NonText ctermbg=none
+]]
