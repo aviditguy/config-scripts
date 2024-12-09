@@ -19,11 +19,6 @@ language-servers = ["vscode-html-language-server", "emmet-ls"]
 formatter = { command = 'prettier', args = ["--parser", "html"] }
 
 [[language]]
-name = "ruby"
-auto-format = true
-language-servers = ["solargraph", "rubocop"]
-
-[[language]]
 name = "typescript"
 auto-format = true
 language-servers = ["typescript-language-server", "vscode-eslint-language-server"]
