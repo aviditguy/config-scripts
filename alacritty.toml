@@ -1,10 +1,35 @@
-[window]
-opacity = 0.95
-startup_mode = 'Maximized'
-
 [font]
-normal = {family = 'TerminessNerdFont', style = 'Light'}
-bold = {family = 'TerminessNerdFont', style = 'Light'}
-italic = {family = 'TerminessNerdFont', style = 'Light'}
-size = 12.0
-offset = {x=1, y=1}
+normal = {family = 'Iosevka Thin Extended', style = 'Normal'}
+bold = {family = 'Iosevka Thin Extended', style = 'Normal'}
+italic = {family = 'Iosevka Thin Extended', style = 'Normal'}
+size = 9.2
+offset = {x=0, y=1}
+
+# Colours (Monokai Charcoal)
+
+# Default Colours
+[colors.primary]
+background = '#000000'
+foreground = '#FFFFFF'
+
+# Normal Colours
+[colors.normal]
+black   = '#1a1a1a'
+red     = '#f4005f'
+green   = '#98e024'
+yellow  = '#fa8419'
+blue    = '#9d65ff'
+magenta = '#f4005f'
+cyan    = '#58d1eb'
+white   = '#c4c5b5'
+
+# Bright Colours
+[colors.bright]
+black   = '#625e4c'
+red     = '#f4005f'
+green   = '#98e024'
+yellow  = '#e0d561'
+blue    = '#9d65ff'
+magenta = '#f4005f'
+cyan    = '#58d1eb'
+white   = '#f6f6ef'
