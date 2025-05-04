@@ -3,13 +3,13 @@
 # set mod key to Windows key
 set $mod Mod4
 
+# Scale down
+exec --no-startup-id xrandr --output eDP --scale 1.1x1.1
+
 for_window [class=".*"] border pixel 2
-gaps inner 5
+gaps inner 0
 focus_follows_mouse no
 client.focused #4c7899 #285577 #ffffff #2e9ef4
-
-# Start Nitrogen to set the wallpaper
-exec --no-startup-id nitrogen --restore
 
 # set i3status
 bar {
@@ -28,10 +28,16 @@ bindsym $mod+f fullscreen toggle
 # toggle floating window
 bindsym $mod+space floating toggle
 
-# set brightness
-exec --no-startup-id sudo light -S 1
-bindsym F11 exec --no-startup-id sudo light -U 1  # decrease
-bindsym F12 exec --no-startup-id sudo light -A 1  # increase
+# Brightness down (F5)
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+# Brightness up (F6)
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+
+# Volume down (F2)
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+# Volume up (F3)
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+
 
 bindsym $mod+Return exec alacritty
 bindsym $mod+d exec dmenu_run
