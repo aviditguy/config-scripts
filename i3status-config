@@ -9,6 +9,7 @@ order += "cpu_usage"
 order += "load"
 order += "memory"
 order += "wireless _first_"
+order += "battery 0"
 order += "tztime local"
 
 disk "/" {
@@ -30,6 +31,11 @@ memory {
 wireless _first_ {
    format_up = "W: Up"
    format_down = "W: Down"
+}
+
+battery 0 {
+   format = "Battery: %status %percentage %remaining"
+   path = "/sys/class/power_supply/BAT0/uevent"
 }
 
 tztime local {
