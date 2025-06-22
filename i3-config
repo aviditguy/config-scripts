@@ -3,14 +3,18 @@
 # set mod key to Windows key
 set $mod Mod4
 
+exec --no-startup-id picom
+
 # Scale down
 exec --no-startup-id xrandr --output eDP --scale 1.1x1.1
 
 # set wallpaper
-exec_always --no-startup-id feh --randomize --bg-max ~/Media/gallery-dl/deviantart/RamBall/*
-
+exec_always --no-startup-id feh --randomize --bg-max ~/Media/Wallpapers/Images
 # change wallpaper
-bindsym $mod+w exec --no-startup-id feh --randomize --bg-max ~/Media/gallery-dl/deviantart/RamBall/*
+bindsym $mod+w exec --no-startup-id ~/.config/i3/image_wallpaper.sh
+# video wallpaper
+bindsym $mod+Shift+w exec --no-startup-id ~/.config/i3/video_wallpaper.sh
+
 
 for_window [class=".*"] border pixel 2
 gaps inner 10
@@ -23,7 +27,7 @@ for_window [class="mpv"] \
   sticky enable, \
   border pixel 0, \
   move position center, \
-  resize set 500 300
+  resize set 1000 700
 
 # set i3status
 bar {
