@@ -17,7 +17,7 @@ bindsym $mod+Shift+w exec --no-startup-id ~/.config/i3/video_wallpaper.sh
 
 
 for_window [class=".*"] border pixel 2
-gaps inner 10
+gaps inner 5
 focus_follows_mouse no
 client.focused #4c7899 #285577 #ffffff #2e9ef4
 
@@ -33,7 +33,7 @@ for_window [class="mpv"] \
 bar {
    status_command i3status
    position top
-   # mode hide
+   mode hide
    font pango:monospace 11
 }
 
