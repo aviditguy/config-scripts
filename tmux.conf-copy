@@ -1,35 +1,55 @@
-# show colors
+# Set terminal type
 set -g default-terminal "screen-256color"
 
-# remap prefix from 'C-b' to 'C-a'
+# Remap prefix from Ctrl-b to Ctrl-a
 unbind C-b
-set-option -g prefix C-a
-bind-key C-a send-prefix
+set -g prefix C-z
+bind C-z send-prefix
 
-# split panes using | and -
-bind | split-window -h
-bind - split-window -v
+# Split panes with | and -
 unbind '"'
 unbind %
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
 
-# split pane in same directory
-bind-key | split-window -h -c "#{pane_current_path}"
-bind-key - split-window -c "#{pane_current_path}"
-
-# reload config file (change file location to your the tmux.conf you want to use)
+# Reload config
 bind r source-file ~/.tmux.conf
 
-# switch panes using Alt-arrow without prefix
+# Alt-arrow to switch panes
 bind -n M-Left select-pane -L
 bind -n M-Right select-pane -R
 bind -n M-Up select-pane -U
 bind -n M-Down select-pane -D
 
-# Enable mouse mode (tmux 2.1 and above)
+# Enable mouse support
 set -g mouse on
 
-# don't rename windows automatically
+# Don't auto-rename windows
 set-option -g allow-rename off
 
-# turn off status bar
-set -g status off
+# === Enable tabs ===
+# Show status bar
+set -g status on
+
+# Shortcuts for window (tab) management
+bind c new-window -c "#{pane_current_path}"    # Ctrl-z c → new tab
+bind & kill-window    # Ctrl-z & → close current tab
+bind n next-window    # Ctrl-z n → next tab
+bind p previous-window # Ctrl-z p → previous tab
+bind w choose-window  # Ctrl-z w → tab list
+
+# Set window (tab) index to start from 1 (optional)
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Show window list in status bar
+set -g status-keys vi
+set -g status-interval 5
+set -g status-justify centre
+set -g status-bg black
+set -g status-fg white
+set -g window-status-current-format "#[fg=green][#I] #W"
+set -g window-status-format "#[fg=blue] #I #W "
+set -g status-interval 60  # update every 60s
+set -g status-right "#(~/.tmux-battery.sh) | %Y-%m-%d %H:%M"
+
