@@ -40,27 +40,18 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 
 -- Plugin manager setup
-vim.opt.rtp:prepend("~/.local/share/nvim/lazy/lazy.nvim")
+vim.opt.rtp:prepend("~/.config/nvim/lazy/lazy.nvim")
 
 require("lazy").setup({
-  {
-    "windwp/nvim-autopairs",
-    config = function()
-      require("nvim-autopairs").setup()
-    end,
-  },
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
-    end,
-  },
-  {
-    "kylechui/nvim-surround",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup()
-    end,
-  }
+{
+  'echasnovski/mini.nvim',
+  version = false, -- latest stable
+  config = function()
+    require('mini.comment').setup()
+    require('mini.pairs').setup()
+    require('mini.surround').setup()
+    require('mini.statusline').setup()
+    -- Add more modules as needed
+  end
+}
 })
-
