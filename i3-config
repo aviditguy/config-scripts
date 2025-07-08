@@ -4,6 +4,7 @@
 set $mod Mod4
 
 exec --no-startup-id picom
+exec --no-startup-id xset b off
 
 # Scale down
 exec --no-startup-id xrandr --output eDP --scale 1.1x1.1
