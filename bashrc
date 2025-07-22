@@ -16,5 +16,6 @@ alias yt-aud='yt-dlp -x --audio-format mp3'
 alias instagd='gallery-dl --cookies ~/.config/gallery-dl/instacookie.txt'
 alias wget_website='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias serve='python3 -m http.server'
+alias record='ffmpeg -video_size 2112x1188 -framerate 30 -f x11grab -i :0.0 output.mp4'
 
 PS1='[\u@\h \W]\$ '
