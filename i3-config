@@ -16,11 +16,13 @@ bindsym $mod+w exec --no-startup-id ~/.config/i3/image_wallpaper.sh
 # video wallpaper
 bindsym $mod+Shift+w exec --no-startup-id ~/.config/i3/video_wallpaper.sh
 
-
 for_window [class=".*"] border pixel 2
 gaps inner 5
 focus_follows_mouse no
 client.focused #4c7899 #285577 #ffffff #2e9ef4
+
+# switch between tiled and floating windows
+bindsym $mod+Tab focus mode_toggle
 
 # make mpv like picture-in-picture mode of browser
 for_window [class="mpv"] \
@@ -28,13 +30,13 @@ for_window [class="mpv"] \
   sticky enable, \
   border pixel 0, \
   move position center, \
-  resize set 1000 700
+  resize set 800 600
 
 # set i3status
 bar {
    status_command i3status
    position top
-   mode hide
+   # mode hide
    font pango:monospace 11
 }
 
@@ -85,10 +87,10 @@ bindsym $mod+r mode "resize"
 
 mode "resize" {
    # Resize floating windows with arrow keys
-   bindsym Up resize shrink height 1 px or 1 ppt
-   bindsym Down resize grow height 1 px or 1 ppt
-   bindsym Left resize shrink width 1 px or 1 ppt
-   bindsym Right resize grow width 1 px or 1 ppt
+   bindsym Up resize shrink height 5 px or 5 ppt
+   bindsym Down resize grow height 5 px or 5 ppt
+   bindsym Left resize shrink width 5 px or 5 ppt
+   bindsym Right resize grow width 5 px or 5 ppt
 
    # Exit resize mode
    bindsym Escape mode "default"
