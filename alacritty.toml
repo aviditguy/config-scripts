@@ -3,11 +3,11 @@ opacity = 0.7
 padding = {x=3, y=3}
 
 [font]
-normal = {family = 'BlexMono Nerd Font ExtraLight', style = 'Normal'}
-bold = {family = 'BlexMono Nerd Font ExtraLight', style = 'Normal'}
-italic = {family = 'BlexMono Nerd Font ExtraLight', style = 'Normal'}
-size = 8.0
-offset = {x=1, y=1}
+normal = {family = 'Monospace', style = 'Normal'}
+bold = {family = 'Monospace', style = 'Normal'}
+italic = {family = 'Monospace', style = 'Normal'}
+size = 9.4
+offset = {x=1, y=2}
 
 # Colours (Monokai Charcoal)
 
