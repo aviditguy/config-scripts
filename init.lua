@@ -171,45 +171,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Set filetype-specific settings
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = { "lua", "python" },
-  callback = function()
-    vim.opt_local.tabstop = 4
-    vim.opt_local.shiftwidth = 4
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = { "javascript", "typescript", "json", "html", "css" },
-  callback = function()
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-  end,
-})
-
--- Auto-close terminal when process exits
-vim.api.nvim_create_autocmd("TermClose", {
-  group = augroup,
-  callback = function()
-    if vim.v.event.status == 0 then
-      vim.api.nvim_buf_delete(0, {})
-    end
-  end,
-})
-
--- Disable line numbers in terminal
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = augroup,
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-  end,
-})
-
 -- Auto-resize splits when window is resized
 vim.api.nvim_create_autocmd("VimResized", {
   group = augroup,
@@ -281,95 +242,6 @@ vim.cmd([[
   highlight MyTabLine guibg=#1e222a guifg=#abb2bf
 ]])
 
--- ============================================================================
--- FLOATING TERMINAL
--- ============================================================================
-
--- Terminal state tracker
-local terminal_state = {
-  buf = nil,
-  win = nil,
-  is_open = false
-}
-
--- Open or toggle floating terminal in bottom-right
-local function FloatingTerminal()
-  -- Toggle off if already open
-  if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
-    vim.api.nvim_win_close(terminal_state.win, false)
-    terminal_state.is_open = false
-    return
-  end
-
-  -- Create terminal buffer if needed
-  if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
-    terminal_state.buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(terminal_state.buf, 'bufhidden', 'hide')
-  end
-
-  -- Position bottom-right
-  local width = math.floor(vim.o.columns * 0.4)
-  local height = math.floor(vim.o.lines * 0.4)
-  local row = vim.o.lines - height - 2
-  local col = vim.o.columns - width - 2
-
-  -- Open floating window
-  terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
-    relative = 'editor',
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = 'minimal',
-    border = 'rounded',
-  })
-
-  -- Appearance
-  vim.api.nvim_win_set_option(terminal_state.win, 'winblend', 0)
-  vim.api.nvim_win_set_option(terminal_state.win, 'winhighlight',
-    'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder')
-  vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
-  vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
-
-  -- Start shell only if not already running
-  local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
-  local is_terminal_running = false
-  for _, line in ipairs(lines) do
-    if line ~= "" then
-      is_terminal_running = true
-      break
-    end
-  end
-  if not is_terminal_running then
-    vim.fn.termopen(os.getenv("SHELL"))
-  end
-
-  terminal_state.is_open = true
-  vim.cmd("startinsert")
-end
-
--- Close floating terminal manually
-local function CloseFloatingTerminal()
-  if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
-    vim.api.nvim_win_close(terminal_state.win, false)
-    terminal_state.is_open = false
-  end
-end
-
--- Key mappings
--- Save file and toggle terminal with <leader>t
-vim.keymap.set("n", "<leader>t", function()
-  vim.cmd("w")
-  FloatingTerminal()
-end, { noremap = true, silent = true, desc = "Toggle floating terminal" })
-
--- Optional: Close terminal with <Esc> from terminal mode
-vim.keymap.set("t", "<Esc>", function()
-  CloseFloatingTerminal()
-end, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
-
--- Optional: Custom key to exit terminal mode (use Ctrl+h)
-vim.keymap.set("t", "<C-h>", [[<C-\><C-n>]], { noremap = true, silent = true, desc = "Exit terminal mode" })
 
 -- ============================================================================
 -- STATUSLINE
@@ -406,15 +278,6 @@ local function file_type()
   end
 
   return (icons[ft] or ft)
-end
-
--- LSP status
-local function lsp_status()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  if #clients > 0 then
-    return "  LSP "
-  end
-  return ""
 end
 
 -- Word count for text files
@@ -465,7 +328,6 @@ _G.mode_icon = mode_icon
 _G.git_branch = git_branch
 _G.file_type = file_type
 _G.file_size = file_size
-_G.lsp_status = lsp_status
 
 vim.cmd([[
   highlight StatusLineBold gui=bold cterm=bold
@@ -487,7 +349,6 @@ local function setup_dynamic_statusline()
       " | ",
       "%{v:lua.file_size()}",
       " | ",
-      "%{v:lua.lsp_status()}",
       "%=",                     -- Right-align everything after this
       "%l:%c  %P ",             -- Line:Column and Percentage
     }
@@ -503,89 +364,6 @@ local function setup_dynamic_statusline()
 end
 
 setup_dynamic_statusline()
-
--- ============================================================================
--- LSP 
--- ============================================================================
-
--- Change popup menu background (Pmenu) and selection (PmenuSel)
-vim.api.nvim_set_hl(0, "Pmenu",      { fg = "#ffffff", bg = "#1e1e2e" })  -- popup menu
-vim.api.nvim_set_hl(0, "PmenuSel",   { fg = "#000000", bg = "#89b4fa", bold = true }) -- selected item
-vim.api.nvim_set_hl(0, "PmenuSbar",  { bg = "#44475a" })  -- scrollbar
-vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#bd93f9" })  -- scrollbar thumb
-
--- Function to find project root
-local function find_root(patterns)
-  local path = vim.fn.expand('%:p:h')
-  local root = vim.fs.find(patterns, { path = path, upward = true })[1]
-  return root and vim.fn.fnamemodify(root, ':h') or path
-end
-
--- Shell LSP setup
-local function setup_shell_lsp()
-  vim.lsp.start({
-    name = 'bashls',
-    cmd = {'bash-language-server', 'start'},
-    filetypes = {'sh', 'bash', 'zsh'},
-    root_dir = find_root({'.git', 'Makefile'}),
-    settings = {
-      bashIde = {
-        globPattern = "*@(.sh|.inc|.bash|.command)"
-      }
-    }
-  })
-end
-
--- Python LSP setup
-local function setup_python_lsp()
-  vim.lsp.start({
-    name = 'pylsp',
-    cmd = {'pylsp'},
-    filetypes = {'python'},
-    root_dir = find_root({'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', '.git'}),
-    settings = {
-      pylsp = {
-        plugins = { 
-          pycodestyle = {
-              enabled = false
-          },
-          flake8 = {
-              enabled = true,
-          },
-          black = { 
-              enabled = true
-          }
-        }
-      }
-    }
-  })
-end
-
--- Autostart clangd for C and C++ files
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'c', 'cpp' },
-  callback = function()
-    vim.lsp.start({
-      name = 'clangd',
-      cmd = { 'clangd' },
-      filetypes = { 'c', 'cpp' },
-      root_dir = vim.fs.dirname(vim.fs.find({'compile_commands.json', '.git'}, { upward = true })[1]),
-    })
-  end,
-})
-
--- Auto-start LSPs based on filetype
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'sh,bash,zsh',
-  callback = setup_shell_lsp,
-  desc = 'Start shell LSP'
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'python',
-  callback = setup_python_lsp,
-  desc = 'Start Python LSP'
-})
 
 -- formatting
 local function format_code()
@@ -619,76 +397,3 @@ vim.api.nvim_create_user_command("FormatCode", format_code, {
 })
 
 vim.keymap.set('n', '<leader>fm', format_code, { desc = 'Format file' })
-
--- LSP keymaps 
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(event)
-    local opts = {buffer = event.buf}
-
-    -- Navigation
-    vim.keymap.set('n', 'gD', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gs', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-
-    -- Information
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-
-    -- Code actions
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-
-    -- Diagnostics
-    vim.keymap.set('n', '<leader>nd', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<leader>pd', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
-  end,
-})
-
--- Better LSP UI
-vim.diagnostic.config({
-  virtual_text = { prefix = '●' },
-  signs = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-})
-
-vim.diagnostic.config({
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "✗",
-      [vim.diagnostic.severity.WARN] = "⚠",
-      [vim.diagnostic.severity.INFO] = "ℹ",
-      [vim.diagnostic.severity.HINT] = "💡",
-    }
-  }
-})
-
-vim.api.nvim_create_user_command('LspInfo', function()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  if #clients == 0 then
-    print("No LSP clients attached to current buffer")
-  else
-    for _, client in ipairs(clients) do
-      print("LSP: " .. client.name .. " (ID: " .. client.id .. ")")
-    end
-  end
-end, { desc = 'Show LSP client info' })
-
-
--- Plugin manager setup
-vim.opt.rtp:prepend("~/.config/nvim/lazy/lazy.nvim")
-
-require("lazy").setup({
-    {
-      'echasnovski/mini.nvim',
-      version = false, -- latest stable
-      config = function()
-        require('mini.surround').setup()
-        require('mini.snippets').setup()
-      end
-    }
-})
