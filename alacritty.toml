@@ -7,7 +7,7 @@ normal = {family = 'Monospace', style = 'Normal'}
 bold = {family = 'Monospace', style = 'Normal'}
 italic = {family = 'Monospace', style = 'Normal'}
 size = 9.4
-offset = {x=1, y=2}
+offset = {x=0, y=2}
 
 # Colours (Monokai Charcoal)
 
