@@ -30,7 +30,7 @@ for_window [class="mpv"] \
   sticky enable, \
   border pixel 0, \
   move position center, \
-  resize set 800 600
+  resize set 1000 700
 
 # set i3status
 bar {
@@ -87,10 +87,10 @@ bindsym $mod+r mode "resize"
 
 mode "resize" {
    # Resize floating windows with arrow keys
-   bindsym Up resize shrink height 5 px or 5 ppt
-   bindsym Down resize grow height 5 px or 5 ppt
-   bindsym Left resize shrink width 5 px or 5 ppt
-   bindsym Right resize grow width 5 px or 5 ppt
+   bindsym Up resize shrink height 2 px or 2 ppt
+   bindsym Down resize grow height 2 px or 2 ppt
+   bindsym Left resize shrink width 2 px or 2 ppt
+   bindsym Right resize grow width 2 px or 2 ppt
 
    # Exit resize mode
    bindsym Escape mode "default"
