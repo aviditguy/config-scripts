@@ -21,9 +21,9 @@
 (setq ring-bell-function 'ignore)
 (global-display-line-numbers-mode t)
 (setq display-line-numbers-type 'relative)
-;;(ido-mode 1)
-;;(ido-everywhere 1)
-(electric-pair-mode 1)
+(ido-mode 1)
+(ido-everywhere 1)
+;;(electric-pair-mode 1)
 (set-face-attribute 'default nil :font "Monospace" :height 160)
 
 (setq auto-save-default nil)   ;; Disable auto-saving
@@ -59,6 +59,22 @@
 
 (global-set-key (kbd "<f5>") 'my/cycle-all-themes)
 
+;; =====================================================================
+;; Formatting
+;; =====================================================================
+(defun format-current-buffer ()
+  "Format current buffer with clang-format (for C/C++) or black (for Python)."
+  (interactive)
+  (when buffer-file-name
+    (save-buffer) ;; save before formatting
+    (cond
+     ((derived-mode-p 'c-mode 'c++-mode)
+      (shell-command (format "clang-format -i %s" (shell-quote-argument buffer-file-name))))
+     ((derived-mode-p 'python-mode)
+      (shell-command (format "black %s" (shell-quote-argument buffer-file-name)))))
+    (revert-buffer t t t))) ;; reload buffer after formatting
+
+(global-set-key (kbd "C-c f") 'format-current-buffer)
 
 ;; =====================================================================
 ;; Org Setup
