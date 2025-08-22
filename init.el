@@ -24,7 +24,7 @@
 (ido-mode 1)
 (ido-everywhere 1)
 ;;(electric-pair-mode 1)
-(set-face-attribute 'default nil :font "Monospace" :height 160)
+(set-face-attribute 'default nil :font "Monospace" :height 150)
 
 (setq auto-save-default nil)   ;; Disable auto-saving
 (setq make-backup-files nil)   ;; Disable backup~ files
