@@ -23,6 +23,8 @@
 (setq display-line-numbers-type 'relative)
 (ido-mode 1)
 (ido-everywhere 1)
+(show-paren-mode 1)
+(electric-pair-mode 1)
 (set-face-attribute 'default nil :font "Iosevka ExtraLight Extended" :height 150)
 
 (setq auto-save-default nil)   ;; Disable auto-saving
@@ -39,8 +41,6 @@
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(load-theme 'doom-material-dark t)
-
 ;; ===========================================================================================
 ;; Formatting
 ;; ===========================================================================================
@@ -56,23 +56,7 @@
       (shell-command (format "black %s" (shell-quote-argument buffer-file-name)))))
     (revert-buffer t t t))) ;; reload buffer after formatting
 
-(global-set-key (kbd "C-c f") 'format-current-buffer)
-
-;; ===========================================================================================
-;; C
-;; ===========================================================================================
-(use-package lsp-mode
-  :hook ((c-mode c++-mode) . lsp)
-  :commands lsp)
-
-(use-package lsp-ui :commands lsp-ui-mode)
-
-(use-package company
-  :config
-  (global-company-mode))  ;; autocomplete
-
-(use-package flycheck
-  :init (global-flycheck-mode)) ;; inline errors
+;; (global-set-key (kbd "C-c f") 'format-current-buffer)
 
 ;; ===========================================================================================
 ;; Org Setup
@@ -123,42 +107,6 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;; ===========================================================================================
-;; Evil Mode (Vim keybindings)
-;; ===========================================================================================
-(use-package evil
-  :init
-  (setq evil-want-integration t) ;; required by evil-collection
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)  ;; let C-u scroll up like in Vim
-  (setq evil-want-C-i-jump nil)  ;; avoid TAB issues
-  :config
-  (evil-mode 1)
-
-  ;; Restore Emacs-like keybindings in insert & normal state
-  (define-key evil-insert-state-map (kbd "C-a") #'move-beginning-of-line)
-  (define-key evil-insert-state-map (kbd "C-e") #'move-end-of-line)
-  (define-key evil-insert-state-map (kbd "C-n") #'next-line)
-  (define-key evil-insert-state-map (kbd "C-p") #'previous-line)
-)
-
-;; (use-package evil-numbers
-;;   :after evil
-;;   :config
-;;   (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-;;   (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt))
-
-(use-package evil-commentary
-  :after evil
-  :config
-  (evil-commentary-mode))
-
-;; Optional: Better Evil integration across modes
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-;; ===========================================================================================
 ;; LaTeX Previews
 ;; ===========================================================================================
 (with-eval-after-load 'org
@@ -171,9 +119,69 @@
 (use-package org-fragtog
   :after org
   :hook (org-mode . org-fragtog-mode))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+
+;; ===========================================================================================
+;; Navigation and Other Useful
+;; ===========================================================================================
+(use-package doom-themes
+  :config (load-theme 'doom-material-dark t))
+
+;; Smart garbage collector (reduces lag)
+(use-package gcmh
+  :init (gcmh-mode 1))
+
+(use-package avy
+  :ensure t
+  :bind (("C-c SPC" . avy-goto-char)
+         ("C-c w"   . avy-goto-word-1)
+         ("C-c l"   . avy-goto-line)))
+
+;; (use-package evil
+;;   :ensure t
+;;   :init
+;;   ;; Some recommended settings
+;;   (setq evil-want-integration t) ;; required by evil-collection
+;;   (setq evil-want-keybinding nil)
+;;   (setq evil-want-C-u-scroll t)  ;; make C-u scroll up like in Vim
+;;   (setq evil-want-C-i-jump nil)  ;; avoid TAB conflicts
+;;   :config
+;;   (evil-mode 1)) ;; enable globally
+
+;; (use-package evil-collection
+;;   :after evil
+;;   :ensure t
+;;   :config 
+;;   (evil-collection-init))
+
+;; (use-package evil-surround
+;;   :config (global-evil-surround-mode 1))
+
+;; (use-package evil-commentary
+;;   :config (evil-commentary-mode))
+
+;; (use-package evil-numbers
+;;   :ensure t)
+;; (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+;; (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+
+;; (use-package evil-leader
+;;   :ensure t
+;;   :after evil
+;;   :config
+;;   (global-evil-leader-mode)
+;;   (evil-leader/set-leader "<SPC>")
+;;   ;; Example leader key bindings
+;;   (evil-leader/set-key
+;;     "fm" 'format-current-buffer))
+
+;; (use-package vterm
+;;   :ensure t
+;;   :commands vterm
+;;   :config
+;;   (setq vterm-max-scrollback 10000)) ;; keep more history
+
+;; (use-package vterm-toggle
+;;   :ensure t
+;;   :after vterm
+;;   :config
+;;   (global-set-key (kbd "C-`") 'vterm-toggle))
