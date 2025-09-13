@@ -1,4 +1,4 @@
-;; ===========================================================================================
+ ;; ===========================================================================================
 ;; PACKAGE MANAGEMENT
 ;; ===========================================================================================
 (require 'package)
@@ -25,7 +25,7 @@
 (ido-everywhere 1)
 (show-paren-mode 1)
 (electric-pair-mode 1)
-(set-face-attribute 'default nil :font "Iosevka ExtraLight Extended" :height 150)
+(set-face-attribute 'default nil :font "Monospace" :height 150)
 
 (setq auto-save-default nil)   ;; Disable auto-saving
 (setq make-backup-files nil)   ;; Disable backup~ files
@@ -42,27 +42,11 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; ===========================================================================================
-;; Formatting
-;; ===========================================================================================
-(defun format-current-buffer ()
-  "Format current buffer with clang-format (for C/C++) or black (for Python)."
-  (interactive)
-  (when buffer-file-name
-    (save-buffer) ;; save before formatting
-    (cond
-     ((derived-mode-p 'c-mode 'c++-mode)
-      (shell-command (format "clang-format -i %s" (shell-quote-argument buffer-file-name))))
-     ((derived-mode-p 'python-mode)
-      (shell-command (format "black %s" (shell-quote-argument buffer-file-name)))))
-    (revert-buffer t t t))) ;; reload buffer after formatting
-
-;; (global-set-key (kbd "C-c f") 'format-current-buffer)
-
-;; ===========================================================================================
 ;; Org Setup
 ;; ===========================================================================================
 (setq org-hide-emphasis-markers t)
 (setq org-startup-folded 'overview)
+(setq org-preview-latex-image-directory ".ltximg/")
 
 (setq org-indent-indentation-per-level 3)
 (add-hook 'org-mode-hook 'org-indent-mode)
@@ -106,6 +90,49 @@
 
 (setq org-confirm-babel-evaluate nil)
 
+(defun my-org-add-date ()
+  "Insert today's date as a top-level Org heading."
+  (interactive)
+  (let ((today (format-time-string "<%d-%m-%Y>")))
+    ;; Insert at top of buffer
+    (goto-char (point-min))
+    ;; Only insert if the date is not already there
+    (unless (looking-at-p (concat "^\\** " today))
+      (insert (format "** %s\n\n" today)))))
+
+(defun my-org-add-todo-helper (task)
+  "Insert a TODO heading with TASK and a start time."
+  (interactive "sEnter task: ")
+  (let ((start-time (format-time-string "%H:%M")))
+    ;; Insert TODO heading
+    (insert (format "*** TODO %s [Start: %s]\n" task start-time))
+    (org-indent-line)))
+
+(defun my-org-add-todo (task)
+  "Add a TODO task under today's date heading."
+  (interactive "sEnter task: ")
+  (my-org-add-date) ;; ensure today's heading exists
+  ;; Move to the end of today's heading
+  (goto-char (point-min))
+  (re-search-forward (format-time-string "<%d-%m-%Y>") nil t)
+  (forward-line)
+  ;; Insert task
+  (my-org-add-todo-helper task))
+
+(defun my-org-todo-timestamps ()
+  "Add end time when TODO is marked DONE, avoid duplicates."
+  (when (and (string= org-state "DONE")
+             (org-at-heading-p))
+    (save-excursion
+      (goto-char (line-end-position))
+      ;; Only insert [End: …] if it doesn't already exist
+      (unless (save-excursion
+                (re-search-backward "\\[End: .*\\]" (line-beginning-position) t))
+        (insert (format " [End: %s]" (format-time-string "%H:%M")))))))
+
+;; Hook the end-time function
+(add-hook 'org-after-todo-state-change-hook 'my-org-todo-timestamps)
+
 ;; ===========================================================================================
 ;; LaTeX Previews
 ;; ===========================================================================================
@@ -121,7 +148,7 @@
   :hook (org-mode . org-fragtog-mode))
 
 ;; ===========================================================================================
-;; Navigation and Other Useful
+;; Useful Packages
 ;; ===========================================================================================
 (use-package doom-themes
   :config (load-theme 'doom-material-dark t))
@@ -136,52 +163,25 @@
          ("C-c w"   . avy-goto-word-1)
          ("C-c l"   . avy-goto-line)))
 
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   ;; Some recommended settings
-;;   (setq evil-want-integration t) ;; required by evil-collection
-;;   (setq evil-want-keybinding nil)
-;;   (setq evil-want-C-u-scroll t)  ;; make C-u scroll up like in Vim
-;;   (setq evil-want-C-i-jump nil)  ;; avoid TAB conflicts
-;;   :config
-;;   (evil-mode 1)) ;; enable globally
+(use-package expand-region
+  :ensure t
+  :bind
+  (("C-=" . er/expand-region)
+   ("C--" . er/contract-region)))
 
-;; (use-package evil-collection
-;;   :after evil
-;;   :ensure t
-;;   :config 
-;;   (evil-collection-init))
+;; ===========================================================================================
+;; Custom Functions and Keybindings
+;; ===========================================================================================
+(defun format-current-buffer ()
+  "Format current buffer with clang-format (for C/C++) or black (for Python)."
+  (interactive)
+  (when buffer-file-name
+    (save-buffer) ;; save before formatting
+    (cond
+     ((derived-mode-p 'c-mode 'c++-mode)
+      (shell-command (format "clang-format -i %s" (shell-quote-argument buffer-file-name))))
+     ((derived-mode-p 'python-mode)
+      (shell-command (format "black %s" (shell-quote-argument buffer-file-name)))))
+    (revert-buffer t t t))) ;; reload buffer after formatting
 
-;; (use-package evil-surround
-;;   :config (global-evil-surround-mode 1))
-
-;; (use-package evil-commentary
-;;   :config (evil-commentary-mode))
-
-;; (use-package evil-numbers
-;;   :ensure t)
-;; (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-;; (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
-
-;; (use-package evil-leader
-;;   :ensure t
-;;   :after evil
-;;   :config
-;;   (global-evil-leader-mode)
-;;   (evil-leader/set-leader "<SPC>")
-;;   ;; Example leader key bindings
-;;   (evil-leader/set-key
-;;     "fm" 'format-current-buffer))
-
-;; (use-package vterm
-;;   :ensure t
-;;   :commands vterm
-;;   :config
-;;   (setq vterm-max-scrollback 10000)) ;; keep more history
-
-;; (use-package vterm-toggle
-;;   :ensure t
-;;   :after vterm
-;;   :config
-;;   (global-set-key (kbd "C-`") 'vterm-toggle))
+(global-set-key (kbd "C-c f") 'format-current-buffer)
